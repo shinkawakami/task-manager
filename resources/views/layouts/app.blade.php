@@ -1,4 +1,36 @@
 <!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>タスク管理アプリ</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-light text-dark">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{{ route('tasks.index') }}">タスク管理</a>
+            <div>
+                @auth
+                    <span class="me-3">こんにちは、{{ Auth::user()->name }} さん</span>
+                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button class="btn btn-sm btn-outline-danger">ログアウト</button>
+                    </form>
+                @endauth
+                @guest
+                    <a href="{{ route('login') }}" class="btn btn-sm btn-outline-primary">ログイン</a>
+                @endguest
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        @yield('content')
+    </main>
+</body>
+</html>
+
+{{-- <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
@@ -33,4 +65,4 @@
             </main>
         </div>
     </body>
-</html>
+</html> --}}
