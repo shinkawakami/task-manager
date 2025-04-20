@@ -1,0 +1,75 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Task;
+use Illuminate\Http\Request;
+
+class TaskController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    // 一覧表示
+    public function index()
+    {
+        $tasks = Task::all(); // 全タスク取得
+        return view('tasks.index', compact('tasks'));
+    }
+
+    // 作成フォーム表示
+    public function create()
+    {
+        return view('tasks.create');
+    }
+
+    // タスク保存
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'nullable',
+        ]);
+
+        Task::create([
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('tasks.index')->with('success', 'タスクを追加しました！');
+    }
+
+    // 編集フォーム表示
+    public function edit(Task $task)
+    {
+        return view('tasks.edit', compact('task'));
+    }
+
+    // 更新処理
+    public function update(Request $request, Task $task)
+    {
+        $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'nullable',
+        ]);
+
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('tasks.index')->with('success', 'タスクを更新しました！');
+    }
+
+    // 削除処理
+    public function destroy(Task $task)
+    {
+        $task->delete();
+
+        return redirect()->route('tasks.index')->with('success', 'タスクを削除しました');
+    }
+
+}
