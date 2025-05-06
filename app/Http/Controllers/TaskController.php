@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -13,10 +14,15 @@ class TaskController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     // 一覧表示
     public function index()
     {
-        $tasks = Task::all(); // 全タスク取得
+        $tasks = Task::where('user_id', Auth::id())->get();
         return view('tasks.index', compact('tasks'));
     }
 
@@ -34,7 +40,7 @@ class TaskController extends Controller
             'description' => 'nullable',
         ]);
 
-        Task::create([
+        Auth::user()->tasks()->create([
             'title' => $request->title,
             'description' => $request->description,
         ]);

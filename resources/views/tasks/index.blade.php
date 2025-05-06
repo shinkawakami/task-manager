@@ -1,4 +1,28 @@
-<!DOCTYPE html>
+@extends('layouts.app')
+
+@section('content')
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>タスク一覧</h1>
+        <a href="{{ route('tasks.create') }}" class="btn btn-primary">新規作成</a>
+    </div>
+
+    @foreach ($tasks as $task)
+        <div class="card mb-2">
+            <div class="card-body">
+                <h5 class="card-title">{{ $task->title }}</h5>
+                <p class="card-text">{{ $task->description }}</p>
+                <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-sm btn-warning">編集</a>
+                <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-sm btn-danger" onclick="return confirm('削除しますか？')">削除</button>
+                </form>
+            </div>
+        </div>
+    @endforeach
+@endsection
+
+{{-- <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -31,4 +55,4 @@
     </ul>
 
 </body>
-</html>
+</html> --}}
