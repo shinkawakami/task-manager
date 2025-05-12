@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
-use Illuminate\Http\Request;
+use App\Http\Requests\TaskRequest;
+//use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
@@ -32,18 +33,20 @@ class TaskController extends Controller
         return view('tasks.create');
     }
 
-    // タスク保存
-    public function store(Request $request)
+    private function validateTask(TaskRequest $request)
     {
         $request->validate([
             'title' => 'required|max:255',
             'description' => 'nullable',
         ]);
+    }
 
-        Auth::user()->tasks()->create([
-            'title' => $request->title,
-            'description' => $request->description,
-        ]);
+    // タスク保存
+    public function store(TaskRequest $request)
+    {
+        $this->validateTask($request);
+
+        Auth::user()->tasks()->create($request->only('title', 'description'));
 
         return redirect()->route('tasks.index')->with('success', 'タスクを追加しました！');
     }
@@ -55,17 +58,11 @@ class TaskController extends Controller
     }
 
     // 更新処理
-    public function update(Request $request, Task $task)
+    public function update(TaskRequest $request, Task $task)
     {
-        $request->validate([
-            'title' => 'required|max:255',
-            'description' => 'nullable',
-        ]);
+        $this->validateTask($request);
 
-        $task->update([
-            'title' => $request->title,
-            'description' => $request->description,
-        ]);
+        $task->update($request->only('title', 'description'));
 
         return redirect()->route('tasks.index')->with('success', 'タスクを更新しました！');
     }
