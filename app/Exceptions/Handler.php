@@ -47,4 +47,29 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+
+    protected function context()
+    {
+        return array_merge(parent::context(), [
+            'user_id' => auth()->id(),
+            'request_url' => request()->fullUrl(),
+        ]);
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        // ModelNotFoundException　findOrFail() でモデルが見つからない場合 Illuminate\Database\Eloquent\ModelNotFoundException
+        // ValidationException　リクエストのバリデーションエラーが発生した場合 Illuminate\Validation\ValidationException
+        // AuthenticationException　認証されていないユーザーがアクセスしようとした場合 Illuminate\Auth\AuthenticationException
+        // AuthorizationException　ユーザーが許可されていないアクションを実行しようとした場合 Illuminate\Auth\Access\AuthorizationException
+        // HttpException　任意のHTTPエラー（例: abort(403) など） Symfony\Component\HttpKernel\Exception\HttpException
+        // ThrottleRequestsException　レートリミットを超えた場合（APIなど） Illuminate\Routing\Exceptions\ThrottleRequestsExceptionまたはIlluminate\Http\Exceptions\ThrottleRequestsException
+        if ($exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+            // exceptionがModelNotFoundExceptionの場合
+            return response()->view('errors.404', [], 404);
+        }
+
+        return parent::render($request, $exception);
+    }
 }
