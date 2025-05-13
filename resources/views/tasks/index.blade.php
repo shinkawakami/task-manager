@@ -11,12 +11,17 @@
             <div class="card-body">
                 <h5 class="card-title">{{ $task->title }}</h5>
                 <p class="card-text">{{ $task->description }}</p>
-                <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-sm btn-warning">編集</a>
-                <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-sm btn-danger" onclick="return confirm('削除しますか？')">削除</button>
-                </form>
+                <p class="card-text"><small class="text-muted">作成日: {{  $task->created_at->format('Y-m-d H:i') }}</small></p>
+                <p class="card-text"><small class="text-muted">更新日: {{  $task->updated_at->format('Y-m-d H:i') }}</small></p>
+                <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-sm btn-info">詳細</a>
+                @can ('update', $task)
+                    <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-sm btn-warning">編集</a>
+                    <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-sm btn-danger" onclick="return confirm('削除しますか？')">削除</button>
+                    </form>
+                @endcan
             </div>
         </div>
     @endforeach
