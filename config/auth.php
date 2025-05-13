@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
+        'guard' => 'web', // webガード
+        'passwords' => 'users', // usersテーブルのパスワードリセット設定
     ],
 
     /*
@@ -35,10 +35,10 @@ return [
     |
     */
 
-    'guards' => [
+    'guards' => [ // 認証ガードの設定
         'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
+            'driver' => 'session', // セッションベースの認証
+            'provider' => 'users', // usersプロバイダを使用
         ],
     ],
 
@@ -61,8 +61,8 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'driver' => 'eloquent', // Eloquent ORMでモデルからデータ取得
+            'model' => App\Models\User::class, // 使用するモデル
         ],
 
         // 'users' => [
@@ -86,12 +86,12 @@ return [
     |
     */
 
-    'passwords' => [
+    'passwords' => [ // パスワードリセット設定
         'users' => [
-            'provider' => 'users',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
+            'provider' => 'users', // 上の users プロバイダーを使う
+            'table' => 'password_resets', // パスワードリセットトークンを保存するテーブル名
+            'expire' => 60, // トークンの有効時間（分）
+            'throttle' => 60, // パスワードリセットの再送制限（60秒以内に再リクエスト不可）
         ],
     ],
 
@@ -106,6 +106,6 @@ return [
     |
     */
 
-    'password_timeout' => 10800,
+    'password_timeout' => 10800, // パスワード確認の有効期限（秒）3時間
 
 ];
