@@ -23,8 +23,17 @@ class TaskController extends Controller
     // 一覧表示
     public function index()
     {
-        $tasks = Task::where('user_id', Auth::id())->get();
+        $tasks = Task::all();
+        //$tasks = Task::where('user_id', Auth::id())->get();
         return view('tasks.index', compact('tasks'));
+    }
+
+    // 詳細表示
+    public function show(Task $task)
+    {
+        //$this->authorize('view', $task);
+
+        return view('tasks.show', compact('task'));
     }
 
     // 作成フォーム表示
