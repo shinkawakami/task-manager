@@ -23,6 +23,13 @@ class TaskController extends Controller
     // 一覧表示
     public function index()
     {
+        $user = Auth::user(); // デフォルトガードで認証されたユーザーを取得(webガードとなる可能性が高い)
+        if (!$user) {
+            logger()->error('User not authenticated');
+            // セッションにエラーメッセージを保存
+            return redirect()->route('login')->with('error', 'ログインしてください');
+        }
+        // Auth::guard('admin')->user(); // adminガードで認証されたユーザーを取得
         $tasks = Task::all();
         //$tasks = Task::where('user_id', Auth::id())->get();
         return view('tasks.index', compact('tasks'));
