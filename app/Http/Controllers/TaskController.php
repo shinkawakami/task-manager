@@ -60,6 +60,8 @@ class TaskController extends Controller
     // 更新処理
     public function update(TaskRequest $request, Task $task)
     {
+        $this->authorize('update', $task);
+
         $this->validateTask($request);
 
         $task->update($request->only('title', 'description'));
